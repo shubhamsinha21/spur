@@ -36,22 +36,29 @@
 
 ### Backend
 
+```bash
 cd spur-backend
-npm install
-# Setup .env file with:
-# OPENAI_API_KEY=<your_openai_key>
-# PG_CONNECTION_STRING=<your_postgres_connection_string>
-# REDIS_URL=<optional_redis_url>
+ npm install
+ Setup .env file with:
+ PORT=5001
+ OPENAI_API_KEY=<your_openai_key>
+ DATABASE_URL=<postgresql://username@localhost:5432/app_name>
+ REDIS_URL=<optional_redis_url>
 
 npm run dev
+```
 
 ### Frontend
+
+```bash
 cd spur-frontend
 npm install
 npm run dev
+```
 # Open in browser: http://localhost:5173
 
 ### Database setup
+```bash
 CREATE DATABASE spur_chat;
 
 -- conversations table
@@ -68,7 +75,7 @@ CREATE TABLE messages (
   text TEXT NOT NULL,
   timestamp TIMESTAMP DEFAULT NOW()
 );
-
+```
 
 ## Architecture Overview
 
