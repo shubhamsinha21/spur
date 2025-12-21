@@ -38,13 +38,18 @@
 
 ```bash
 cd spur-backend
- npm install
+npm install
+```
+
+```bash
  Setup .env file with:
  PORT=5001
  OPENAI_API_KEY=<your_openai_key>
- DATABASE_URL=<postgresql://username@localhost:5432/app_name>
+ PG_CONNECTION_STRING=<postgresql://username@localhost:5432/app_name>
  REDIS_URL=<optional_redis_url>
+```
 
+```bash
 npm run dev
 ```
 
@@ -55,7 +60,7 @@ cd spur-frontend
 npm install
 npm run dev
 ```
-# Open in browser: http://localhost:5173
+ ***Open in browser: http://localhost:5173***
 
 ### Database setup
 ```bash
