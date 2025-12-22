@@ -5,20 +5,18 @@ let redisClient: ReturnType<typeof createClient> | null = null;
 export async function initRedis() {
   const redisUrl = process.env.REDIS_URL;
 
-  if (!redisUrl || redisUrl === "<optional>") {
-    console.log("⚠️ Redis disabled: invalid or missing REDIS_URL");
-    return null;
-  }
+  const finalRedisUrl =
+    !redisUrl || redisUrl === "<optional>" ? "redis://127.0.0.1:6379" : redisUrl;
 
   try {
-    redisClient = createClient({ url: redisUrl });
+    redisClient = createClient({ url: finalRedisUrl });
 
     redisClient.on("error", (err) => {
       console.error("Redis error:", err);
     });
 
     await redisClient.connect();
-    console.log("✅ Redis connected");
+    console.log(`✅ Redis connected (${finalRedisUrl})`);
 
     return redisClient;
   } catch (err) {

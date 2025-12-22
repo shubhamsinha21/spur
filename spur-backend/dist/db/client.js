@@ -8,7 +8,8 @@ const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 exports.pool = new pg_1.Pool({
-    connectionString: process.env.PG_CONNECTION_STRING
+    connectionString: process.env.PG_CONNECTION_STRING,
+    // SSL handled via ?sslmode=require in connection string
 });
 const query = (text, params) => exports.pool.query(text, params);
 exports.query = query;

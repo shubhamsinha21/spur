@@ -1,4 +1,3 @@
-// db/migration.ts
 import { pool } from './client';
 
 export async function runMigrations() {
@@ -24,6 +23,6 @@ export async function runMigrations() {
     console.log('✅ Migrations ran successfully');
   } catch (err) {
     console.error('❌ Migration failed:', err);
-    throw err; // Propagate error to app.ts
+    throw err;
   }
 }
