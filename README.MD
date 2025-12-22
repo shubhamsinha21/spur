@@ -4,6 +4,8 @@
 
 ## Demo / Screenshot
 
+
+
 ## Tech Stack 
 
 **Frontend**: React + TypeScript + TailwindCSS
@@ -20,17 +22,47 @@
 
 1. End-to-end AI chat (user → backend → LLM → AI response → frontend)
 
-2. Conversation persistence using session IDs
+2. Suggested questions for quick start
 
-3. Typing indicator while waiting for AI response
+3. Conversation persistence using session IDs
 
-4. Robust error handling (API failures, empty input)
+4. Typing indicator while waiting for AI response
 
-5. Modern, responsive chat UI with TailwindCSS
+5. Robust error handling (API failures, empty input)
 
-6. “Start new chat” functionality
+6. Modern, responsive chat UI with TailwindCSS
 
-6. Session persistence across page reloads
+7. “Start new chat” functionality
+
+8. Session persistence across page reloads
+
+9. Smooth scrolling and message history display
+
+10. ✅ Extra polish: Friendly greeting messages and session persistence across reloads
+
+## Deployment 
+
+**Backend** Deployed on Render
+**Frontend** Deployed on Vercel
+
+## Environment variables
+
+**Backend(.env)** 
+
+```bash
+
+PORT=5000
+OPENAI_API_KEY=<your_openai_api_key>
+PG_CONNECTION_STRING=<postgresql://username:password@host:port/db_name>
+REDIS_URL=<optional_redis_url>
+```
+
+**Frontend(.env)**
+
+```bash
+
+VITE_API_URL=https://<your_render_backend_url>/chat
+```
 
 ## How to Run Locally
 
@@ -39,17 +71,6 @@
 ```bash
 cd spur-backend
 npm install
-```
-
-```bash
- Setup .env file with:
- PORT=5001
- OPENAI_API_KEY=<your_openai_key>
- PG_CONNECTION_STRING=<postgresql://username@localhost:5432/app_name>
- REDIS_URL=<optional_redis_url>
-```
-
-```bash
 npm run dev
 ```
 
@@ -60,6 +81,7 @@ cd spur-frontend
 npm install
 npm run dev
 ```
+
  ***Open in browser: http://localhost:5173***
 
 ### Database setup
@@ -107,6 +129,8 @@ LLM Service (OpenAI GPT-4o-mini)
 
 ## LLM Integration
 
+**OPENAI Model Used**: gpt-4o-mini
+
 **System prompt**:
 
 - "You are a helpful support agent for a small e-commerce store. Answer clearly and concisely."
@@ -124,3 +148,17 @@ LLM Service (OpenAI GPT-4o-mini)
 - Max tokens capped for cost control
 
 - Errors/timeouts handled gracefully
+
+## Testing flow (Frontend)
+
+1. Open frontend URL (local or Vercel)
+
+2. Click on suggested questions, e.g., “What are your support hours?”
+
+3. Verify AI response appears below
+
+4. Ask follow-up questions, e.g., “Can I reach out on Saturday?”
+
+5. Use “Start new chat” to reset session
+
+Note-> Session persists across reloads. Frontend directly communicates with Render backend.
