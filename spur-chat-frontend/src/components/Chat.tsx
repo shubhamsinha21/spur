@@ -7,7 +7,7 @@ interface ChatMessage {
   text: string;
 }
 
-const SUGGESTED_QUESTIONS = [ // ⭐ NEW
+const SUGGESTED_QUESTIONS = [
   "Do you ship internationally?",
   "What is your return policy?",
   "How long does shipping take?",
@@ -30,9 +30,8 @@ function Chat() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
-  
 
-  const sendMessage = async (text?: string) => { // ⭐ UPDATED
+  const sendMessage = async (text?: string) => {
     const messageToSend = text ?? input;
     if (!messageToSend.trim()) return;
 
@@ -42,10 +41,13 @@ function Chat() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5001/chat/message", {
-        message: messageToSend,
-        sessionId,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/message`, // ✅ Env variable for backend URL
+        {
+          message: messageToSend,
+          sessionId,
+        }
+      );
 
       setMessages((prev) => [
         ...prev,
@@ -54,7 +56,8 @@ function Chat() {
 
       setSessionId(res.data.sessionId);
       localStorage.setItem("chatSessionId", res.data.sessionId);
-    } catch {
+    } catch (err) {
+      console.error("Chat API error:", err); // Optional debug
       setMessages((prev) => [
         ...prev,
         { sender: "ai", text: "Sorry, something went wrong. Please try again." },
@@ -80,13 +83,9 @@ function Chat() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-
-          {/* ⭐ Suggested Questions */}
           {messages.length === 0 && !loading && (
             <div className="space-y-3">
-              <p className="text-slate-400 text-sm">
-                Try asking one of these:
-              </p>
+              <p className="text-slate-400 text-sm">Try asking one of these:</p>
               <div className="flex flex-wrap gap-2">
                 {SUGGESTED_QUESTIONS.map((q) => (
                   <button
@@ -148,6 +147,6 @@ function Chat() {
       </div>
     </div>
   );
-};
+}
 
 export default Chat;
