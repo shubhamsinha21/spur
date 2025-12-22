@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import chatRouter from "./routes/chat";
 import { initRedis } from "./redis";
-import { runMigrations } from "./db/migration";
+import { runMigrations } from "./db/migrations";
 
 dotenv.config();
 
