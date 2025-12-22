@@ -9,8 +9,16 @@ dotenv.config();
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
+
+// Root route for health check
+app.get("/", (req, res) => {
+  res.send("🚀 Server is running! Use /chat endpoint for requests.");
+});
+
+// Chat API
 app.use("/chat", chatRouter);
 
 const PORT = process.env.PORT || 5000;
@@ -23,7 +31,9 @@ async function startServer() {
 
     // Initialize Redis
     await initRedis();
+    console.log("✅ Redis connected");
 
+    // Start Express server
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
