@@ -3,15 +3,15 @@ import { createClient } from "redis";
 let redisClient: ReturnType<typeof createClient> | null = null;
 
 export async function initRedis() {
-  if (!process.env.REDIS_URL) {
-    console.log("⚠️ Redis disabled: REDIS_URL not provided");
+  const redisUrl = process.env.REDIS_URL;
+
+  if (!redisUrl || redisUrl === "<optional>") {
+    console.log("⚠️ Redis disabled: invalid or missing REDIS_URL");
     return null;
   }
 
   try {
-    redisClient = createClient({
-      url: process.env.REDIS_URL,
-    });
+    redisClient = createClient({ url: redisUrl });
 
     redisClient.on("error", (err) => {
       console.error("Redis error:", err);
