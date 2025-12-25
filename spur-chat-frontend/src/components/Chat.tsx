@@ -5,6 +5,7 @@ import axios from "axios";
 interface ChatMessage {
   sender: "user" | "ai";
   text: string;
+  timestamp?: string;
 }
 
 const SUGGESTED_QUESTIONS = [
@@ -22,9 +23,23 @@ function Chat() {
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
+  // Load session and chat history
   useEffect(() => {
     const savedSessionId = localStorage.getItem("chatSessionId");
-    if (savedSessionId) setSessionId(savedSessionId);
+    if (savedSessionId) {
+      setSessionId(savedSessionId);
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/history/${savedSessionId}`)
+        .then((res) => {
+          // Add timestamps if not present
+          const msgs = res.data.messages.map((m: any) => ({
+            ...m,
+            timestamp: m.timestamp || new Date().toISOString(),
+          }));
+          setMessages(msgs);
+        })
+        .catch((err) => console.error("Failed to fetch chat history:", err));
+    }
   }, []);
 
   useEffect(() => {
@@ -35,20 +50,23 @@ function Chat() {
     const messageToSend = text ?? input;
     if (!messageToSend.trim()) return;
 
-    setMessages((prev) => [...prev, { sender: "user", text: messageToSend }]);
+    const userMsg: ChatMessage = { sender: "user", text: messageToSend, timestamp: new Date().toISOString() };
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/message`,
-        { message: messageToSend, sessionId }
-      );
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/message`, {
+        message: messageToSend,
+        sessionId,
+      });
 
-      setMessages((prev) => [
-        ...prev,
-        { sender: "ai", text: res.data.reply },
-      ]);
+      const aiMsg: ChatMessage = {
+        sender: "ai",
+        text: res.data.reply,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, aiMsg]);
 
       setSessionId(res.data.sessionId);
       localStorage.setItem("chatSessionId", res.data.sessionId);
@@ -56,7 +74,7 @@ function Chat() {
       console.error("Chat API error:", err);
       setMessages((prev) => [
         ...prev,
-        { sender: "ai", text: "Sorry, something went wrong. Please try again." },
+        { sender: "ai", text: "Sorry, something went wrong. Please try again.", timestamp: new Date().toISOString() },
       ]);
     } finally {
       setLoading(false);
@@ -67,9 +85,12 @@ function Chat() {
     if (e.key === "Enter") sendMessage();
   };
 
+  // Format timestamp as hh:mm AM/PM
+  const formatTime = (ts: string) => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center px-4">
-      <div className="w-full max-w-3xl bg-slate-950 rounded-2xl shadow-2xl flex flex-col overflow-hidden h-[85vh] sm:h-[800px]">
+      <div className="w-full max-w-3xl bg-slate-950 rounded-2xl shadow-2xl flex flex-col overflow-hidden h-[800px]">
 
         {/* Header */}
         <div className="px-5 py-5 border-b border-white/10 text-center">
@@ -99,13 +120,27 @@ function Chat() {
           )}
 
           {messages.map((m, idx) => (
-            <Message key={idx} sender={m.sender} text={m.text} />
+            <div
+              key={idx}
+              className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`px-4 py-2 rounded-lg max-w-[70%] break-words ${
+                  m.sender === "user"
+                    ? "bg-indigo-600 text-white rounded-br-none"
+                    : "bg-slate-700 text-slate-100 rounded-bl-none"
+                }`}
+              >
+                <p>{m.text}</p>
+                {m.timestamp && (
+                  <span className="text-xs text-slate-400 mt-1 block text-right">{formatTime(m.timestamp)}</span>
+                )}
+              </div>
+            </div>
           ))}
 
           {loading && (
-            <div className="text-slate-400 text-sm animate-pulse">
-              Agent is typing…
-            </div>
+            <div className="text-slate-400 text-sm animate-pulse">Agent is typing…</div>
           )}
 
           <div ref={bottomRef} />
@@ -137,7 +172,7 @@ function Chat() {
               setSessionId(null);
               setMessages([]);
             }}
-            className="mt-4 px-3 py-2 rounded-md text-xs text-slate-400 hover:text-indigo-500 border border-indigo-500"
+            className="mt-4 px-1 py-2 rounded-md text-xs text-slate-400 hover:text-indigo-500 border-2 border-indigo-500"
           >
             Start new chat
           </button>
