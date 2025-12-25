@@ -35,18 +35,14 @@ function Chat() {
     const messageToSend = text ?? input;
     if (!messageToSend.trim()) return;
 
-    const userMsg: ChatMessage = { sender: "user", text: messageToSend };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [...prev, { sender: "user", text: messageToSend }]);
     setInput("");
     setLoading(true);
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/message`, // ✅ Env variable for backend URL
-        {
-          message: messageToSend,
-          sessionId,
-        }
+        `${import.meta.env.VITE_API_URL}/message`,
+        { message: messageToSend, sessionId }
       );
 
       setMessages((prev) => [
@@ -57,7 +53,7 @@ function Chat() {
       setSessionId(res.data.sessionId);
       localStorage.setItem("chatSessionId", res.data.sessionId);
     } catch (err) {
-      console.error("Chat API error:", err); // Optional debug
+      console.error("Chat API error:", err);
       setMessages((prev) => [
         ...prev,
         { sender: "ai", text: "Sorry, something went wrong. Please try again." },
@@ -73,12 +69,14 @@ function Chat() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-slate-950 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        
+      <div className="w-full max-w-3xl bg-slate-950 rounded-2xl shadow-2xl flex flex-col overflow-hidden h-[85vh] sm:h-[800px]">
+
         {/* Header */}
-        <div className="px-5 py-4 border-b border-white/10">
-          <h2 className="text-white font-semibold text-lg">Spur Support</h2>
-          <p className="text-slate-400 text-xs">AI Agent • Online</p>
+        <div className="px-5 py-5 border-b border-white/10 text-center">
+          <h2 className="text-white font-bold text-2xl">Spur Support</h2>
+          <p className="text-slate-400 text-sm mt-1">
+            AI Agent <span className="text-green-500">• Online</span>
+          </p>
         </div>
 
         {/* Messages */}
@@ -139,7 +137,7 @@ function Chat() {
               setSessionId(null);
               setMessages([]);
             }}
-            className="mt-3 text-xs text-slate-400 hover:text-white"
+            className="mt-4 px-3 py-2 rounded-md text-xs text-slate-400 hover:text-indigo-500 border border-indigo-500"
           >
             Start new chat
           </button>
