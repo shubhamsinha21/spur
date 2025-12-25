@@ -1,4 +1,4 @@
-# Spur AI Chat - Take-Home Assignment
+# Spur AI Chat
 
 ### A mini AI support agent simulating a live chat widget using React, Node.js, PostgreSQL, Redis, and OpenAI.
 
