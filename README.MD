@@ -162,3 +162,9 @@ LLM Service (OpenAI GPT-4o-mini)
 5. Use “Start new chat” to reset session
 
 Note-> Session persists across reloads. Frontend directly communicates with Render backend.
+
+## Demo Note
+
+This project is deployed using free-tier services (OpenAI / Render), so the demo may occasionally fail or respond slowly due to API limits or cold starts.
+
+For a stable walkthrough, feel free to check the code or request a quick demo.
