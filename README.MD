@@ -2,72 +2,60 @@
 
 ### A mini AI support agent simulating a live chat widget using React, Node.js, PostgreSQL, Redis, and OpenAI.
 
-## Demo / Screenshot
+---
 
+## 🧠 Tech Stack 
 
+**Frontend**: React + TypeScript + TailwindCSS  
+**Backend**: Node.js + TypeScript + Express  
+**Database**: PostgreSQL  
+**Cache**: Redis (optional, for session caching)  
+**LLM**: OpenAI GPT-4o-mini  
 
-## Tech Stack 
+---
 
-**Frontend**: React + TypeScript + TailwindCSS
+## ⚙️ Features
 
-**Backend**: Node.js + TypeScript + Express
+- End-to-end AI chat (user → backend → LLM → response → frontend)  
+- Suggested questions for quick start  
+- Conversation persistence using session IDs  
+- Typing indicator for real-time feel  
+- Robust error handling (API failures, empty input)  
+- Responsive chat UI with TailwindCSS  
+- “Start new chat” functionality  
+- Session persistence across reloads  
+- Smooth scrolling + message history  
+- Friendly greeting messages for better UX  
 
-**Database**: PostgreSQL
+---
 
-**Cache**: Redis (optional, for session caching)
+## 🌐 Deployment
 
-**LLM**: OpenAI GPT-4o-mini
+- **Frontend**: Vercel  
+- **Backend**: Render  
 
-## Features Implemented
+---
 
-1. End-to-end AI chat (user → backend → LLM → AI response → frontend)
+## 🔐 Environment Variables
 
-2. Suggested questions for quick start
-
-3. Conversation persistence using session IDs
-
-4. Typing indicator while waiting for AI response
-
-5. Robust error handling (API failures, empty input)
-
-6. Modern, responsive chat UI with TailwindCSS
-
-7. “Start new chat” functionality
-
-8. Session persistence across page reloads
-
-9. Smooth scrolling and message history display
-
-10. ✅ Extra polish: Friendly greeting messages and session persistence across reloads
-
-## Deployment 
-
-**Backend** Deployed on Render
-**Frontend** Deployed on Vercel
-
-## Environment variables
-
-**Backend(.env)** 
-
+### Backend (`.env`)
 ```bash
-
 PORT=5000
 OPENAI_API_KEY=<your_openai_api_key>
 PG_CONNECTION_STRING=<postgresql://username:password@host:port/db_name>
 REDIS_URL=<optional_redis_url>
 ```
 
-**Frontend(.env)**
-
+### Frontend (`.env`)
 ```bash
-
 VITE_API_URL=https://<your_render_backend_url>/chat
 ```
 
-## How to Run Locally
+---
+
+## 🛠️ Run Locally
 
 ### Backend
-
 ```bash
 cd spur-backend
 npm install
@@ -75,96 +63,100 @@ npm run dev
 ```
 
 ### Frontend
-
 ```bash
 cd spur-frontend
 npm install
 npm run dev
 ```
 
- ***Open in browser: http://localhost:5173***
+Open in browser: http://localhost:5173
 
-### Database setup
-```bash
+---
+
+## 🗄️ Database Setup
+
+```sql
 CREATE DATABASE spur_chat;
 
--- conversations table
 CREATE TABLE conversations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   createdAt TIMESTAMP DEFAULT NOW()
 );
 
--- messages table
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   conversationId UUID REFERENCES conversations(id),
-  sender VARCHAR(10) NOT NULL, -- "user" | "ai"
+  sender VARCHAR(10) NOT NULL,
   text TEXT NOT NULL,
   timestamp TIMESTAMP DEFAULT NOW()
 );
 ```
 
-## Architecture Overview
+---
 
+## 🏗️ Architecture
+
+```
 Frontend (React + Tailwind)
-          |
-          v
+        ↓
 Backend API (Express + TypeScript)
-          |
-          v
-Database (PostgreSQL) <-> Optional Redis Cache
-          |
-          v
-LLM Service (OpenAI GPT-4o-mini)
+        ↓
+PostgreSQL <-> Redis (optional)
+        ↓
+OpenAI (GPT-4o-mini)
+```
 
-**Notes**
+---
 
-- /chat/message endpoint handles messages and returns AI replies
+## 🔍 System Notes
 
-- LLM call is encapsulated in generateReply(history, userMessage)
+- `/chat/message` handles user input and AI response  
+- LLM logic is encapsulated in `generateReply(history, userMessage)`  
+- Conversation state maintained via `conversationId`  
+- Designed to extend into multi-channel systems (WhatsApp, etc.)  
 
-- Messages stored with conversationId for session persistence
+---
 
-- Modular design allows adding new channels (WhatsApp, Instagram, FB) easily
+## 🤖 LLM Details
 
-## LLM Integration
+**Model**: GPT-4o-mini  
 
-**OPENAI Model Used**: gpt-4o-mini
-
-**System prompt**:
-
-- "You are a helpful support agent for a small e-commerce store. Answer clearly and concisely."
+**System Prompt**:
+> You are a helpful support agent for a small e-commerce store. Answer clearly and concisely.
 
 **Seeded FAQs**:
+- Shipping: 5–10 days worldwide  
+- Returns: 30-day policy  
+- Support: 9am–6pm IST  
 
-- Shipping: Ships worldwide within 5-10 days
+**Other**:
+- Token limits for cost control  
+- Graceful handling of API failures/timeouts  
 
-- Return policy: 30-day refund/return
+---
 
-- Support hours: 9am-6pm IST
+## 🧪 Testing Flow
 
-**Other details**:
+1. Open deployed or local frontend  
+2. Try suggested prompts (e.g., support hours)  
+3. Ask follow-up questions  
+4. Start a new chat to reset session  
 
-- Max tokens capped for cost control
+Session persists across reloads.
 
-- Errors/timeouts handled gracefully
+---
 
-## Testing flow (Frontend)
+## ⚠️ Demo Note
 
-1. Open frontend URL (local or Vercel)
+This project runs on free-tier services (OpenAI + Render), so the live demo may occasionally be slow or fail due to API limits or cold starts.
 
-2. Click on suggested questions, e.g., “What are your support hours?”
+If that happens, the codebase reflects the intended behavior — happy to walk through it or share a quick demo.
 
-3. Verify AI response appears below
+---
 
-4. Ask follow-up questions, e.g., “Can I reach out on Saturday?”
+## 📌 Summary
 
-5. Use “Start new chat” to reset session
-
-Note-> Session persists across reloads. Frontend directly communicates with Render backend.
-
-## Demo Note
-
-This project is deployed using free-tier services (OpenAI / Render), so the demo may occasionally fail or respond slowly due to API limits or cold starts.
-
-For a stable walkthrough, feel free to check the code or request a quick demo.
+This project focuses on building a **realistic AI support experience**, handling:
+- multi-turn conversations  
+- session consistency  
+- real-world failure cases  
