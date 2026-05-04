@@ -8,7 +8,6 @@
 
 **Frontend**: React + TypeScript + TailwindCSS  
 **Backend**: Node.js + TypeScript + Express  
-**Database**: PostgreSQL  
 **Cache**: Redis (optional, for session caching)  
 **LLM**: OpenAI GPT-4o-mini  
 
