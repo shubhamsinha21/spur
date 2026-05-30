@@ -1,6 +1,6 @@
 # Spur AI Chat
 
-### A mini AI support agent simulating a live chat widget using React, Node.js, PostgreSQL, Redis, and OpenAI.
+### Built an AI-powered customer support platform enabling conversational chat for e-commerce use cases. A mini AI support agent simulating a live chat widget using React, Node.js, PostgreSQL, Redis, and OpenAI.
 
 ---
 
@@ -9,6 +9,7 @@
 **Frontend**: React + TypeScript + TailwindCSS  
 **Backend**: Node.js + TypeScript + Express  
 **Cache**: Redis (optional, for session caching)  
+**Cache**: PostgresSQL
 **LLM**: OpenAI GPT-4o-mini  
 
 ---
